@@ -79,13 +79,16 @@
   </header>
 
   <main>
-    <!-- Hero Section: Asymmetric 60/40 Split -->
-    <section class="hero-section">
+    <!-- Hero Section: Interactive 3D Intro Experience -->
+    <section class="hero-section" id="intro-section">
+      <!-- Ambient 3D Floating Hearth Embers Canvas -->
+      <canvas id="heroEmbersCanvas" class="hero-embers-canvas" aria-hidden="true"></canvas>
+
       <div class="container hero-grid">
         <div class="hero-content">
-          <div class="eyebrow-badge">
+          <div class="eyebrow-badge badge-3d">
             <span class="badge-dot"></span>
-            <span>SEASONAL AUTUMN HEARTH MENU · LIVE TONIGHT</span>
+            <span>INTERACTIVE 3D DINING EXPERIENCE · LIVE TONIGHT</span>
           </div>
 
           <h1 class="hero-title">
@@ -94,47 +97,72 @@
           </h1>
 
           <p class="hero-subtitle">
-            White-oak embers, heirloom coastal produce, and unhurried hospitality. Reserve your table time slot online in seconds, pre-select dishes for your table, or speak directly with our host desk.
+            Explore our dishes in interactive 3D, inspect your exact table on our 3D floor map, lock your booking slot in seconds, or connect with our live host desk.
           </p>
 
+          <!-- User-Friendly 3D Intro Mode Quick-Launcher Pills -->
+          <div class="intro-3d-launcher" role="group" aria-label="Interactive 3D Intro Modes">
+            <button type="button" class="launcher-3d-Chip active" data-stage-mode="dish">
+              <span class="chip-3d-icon" aria-hidden="true">🍽️</span>
+              <div class="chip-3d-text">
+                <strong>3D Dish Inspector</strong>
+                <span>Tilt, flip &amp; pre-order</span>
+              </div>
+            </button>
+            <button type="button" class="launcher-3d-Chip" data-stage-mode="map">
+              <span class="chip-3d-icon" aria-hidden="true">🪑</span>
+              <div class="chip-3d-text">
+                <strong>3D Table Map</strong>
+                <span>Pick your exact seat</span>
+              </div>
+            </button>
+            <button type="button" class="launcher-3d-Chip" data-stage-mode="call">
+              <span class="chip-3d-icon" aria-hidden="true">📞</span>
+              <div class="chip-3d-text">
+                <strong>3D Host Desk</strong>
+                <span>Instant call &amp; callback</span>
+              </div>
+            </button>
+          </div>
+
           <div class="hero-cta-row">
-            <a href="#booking-section" class="btn btn-primary btn-lg">
+            <a href="#booking-section" class="btn btn-primary btn-lg btn-3d-push">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               <span>Reserve a Time Slot</span>
             </a>
-            <a href="#call-section" class="btn btn-secondary btn-lg">
+            <a href="#call-section" class="btn btn-secondary btn-lg btn-3d-secondary">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               <span>Call Host: (555) 234-5678</span>
             </a>
           </div>
 
-          <!-- Instant Tonight Slot Quick-Jump Bar -->
-          <div class="hero-quick-slots" aria-label="Quick select available slots tonight">
+          <!-- Instant Tonight Slot Quick-Jump Bar (3D Tactile Keys) -->
+          <div class="hero-quick-slots quick-slots-3d-panel" aria-label="Quick select available slots tonight">
             <div class="quick-slots-header">
               <span class="quick-slots-label">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Instant Slots Tonight (2 Guests):
+                Instant 3D Slot Keys Tonight (2 Guests):
               </span>
-              <span class="quick-slots-hint">Click any time to jump &amp; lock slot</span>
+              <span class="quick-slots-hint">Press any 3D key to lock slot</span>
             </div>
             <div class="quick-slots-pills" id="heroQuickSlots">
-              <button type="button" class="quick-slot-pill" data-quick-time="18:00">
+              <button type="button" class="quick-slot-pill key-3d" data-quick-time="18:00">
                 <span class="mono-text">18:00</span>
                 <span class="slot-sub">Hearth</span>
               </button>
-              <button type="button" class="quick-slot-pill" data-quick-time="18:30">
+              <button type="button" class="quick-slot-pill key-3d" data-quick-time="18:30">
                 <span class="mono-text">18:30</span>
                 <span class="slot-sub">Patio</span>
               </button>
-              <button type="button" class="quick-slot-pill hot" data-quick-time="19:30">
+              <button type="button" class="quick-slot-pill hot key-3d" data-quick-time="19:30">
                 <span class="mono-text">19:30</span>
                 <span class="slot-sub">1 left</span>
               </button>
-              <button type="button" class="quick-slot-pill" data-quick-time="20:15">
+              <button type="button" class="quick-slot-pill key-3d" data-quick-time="20:15">
                 <span class="mono-text">20:15</span>
                 <span class="slot-sub">Counter</span>
               </button>
-              <button type="button" class="quick-slot-pill" data-quick-time="21:00">
+              <button type="button" class="quick-slot-pill key-3d" data-quick-time="21:00">
                 <span class="mono-text">21:00</span>
                 <span class="slot-sub">Booth</span>
               </button>
@@ -142,26 +170,248 @@
           </div>
         </div>
 
+        <!-- Right Column: Interactive 3D Multi-Mode Stage -->
         <div class="hero-visual">
-          <div class="hero-image-frame">
-            <img
-              src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1100&q=85"
-              alt="Wood-fired herb-crusted ribeye and charred seasonal vegetables on stoneware"
-              class="hero-img"
-            />
-            <!-- Floating Tonight's Special Interactive Card -->
-            <div class="hero-floating-card">
-              <div class="floating-card-top">
-                <span class="floating-tag">TONIGHT'S HEARTH FEATURE</span>
-                <span class="floating-price mono-text">$42</span>
+          <!-- Top 3D Stage Mode Tabs & Interactive Hint -->
+          <div class="stage-3d-toolbar">
+            <div class="stage-3d-tabs" role="tablist" aria-label="3D Stage View Switcher">
+              <button type="button" class="stage-tab active" data-stage-tab="dish" role="tab" aria-selected="true">
+                🍽️ 3D Dish
+              </button>
+              <button type="button" class="stage-tab" data-stage-tab="map" role="tab" aria-selected="false">
+                🏛️ 3D Table Map
+              </button>
+              <button type="button" class="stage-tab" data-stage-tab="call" role="tab" aria-selected="false">
+                📞 3D Host Cube
+              </button>
+            </div>
+            <span class="stage-3d-hint" id="stage3dHint">Move cursor to tilt 3D</span>
+          </div>
+
+          <!-- 3D Perspective Viewport -->
+          <div class="stage-3d-viewport" id="hero3dViewport">
+            <!-- =========================================================
+                 MODE 1: 3D Interactive Dish Showcase (Tilt + Flip + Cycle)
+                 ========================================================= -->
+            <div class="stage-3d-scene active" id="scene3dDish">
+              <div class="card-3d-rig" id="dish3dRig">
+                <div class="card-3d-flipper" id="dish3dFlipper">
+                  <!-- FRONT OF 3D DISH CARD -->
+                  <div class="card-3d-face card-3d-front">
+                    <div class="hero-image-frame frame-3d-layered">
+                      <img
+                        src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1100&q=85"
+                        alt="Wood-fired herb-crusted ribeye and charred seasonal vegetables on stoneware"
+                        class="hero-img"
+                        id="hero3dDishImg"
+                      />
+                      <!-- Dynamic Specular Glare Overlay -->
+                      <div class="glare-3d-layer" id="hero3dGlare"></div>
+
+                      <!-- Floating 3D Depth Badges (Pop out at translateZ(55px)) -->
+                      <div class="floating-3d-badges-top">
+                        <div class="depth-badge badge-fire" id="hero3dBadgeLeft">
+                          <span>🔥 480°C White-Oak Hearth</span>
+                        </div>
+                        <div class="depth-badge badge-rating" id="hero3dBadgeRight">
+                          <span>★ 4.9 Guest Favorite</span>
+                        </div>
+                      </div>
+
+                      <!-- 3D Flip Trigger Pill in Top-Right over image -->
+                      <button type="button" class="flip-3d-trigger-btn" id="flipDishCardBtn" aria-label="Flip 3D card for chef tasting notes">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                        <span>Flip 3D Details</span>
+                      </button>
+
+                      <!-- Floating 3D Dish Info Card (Pop out at translateZ(75px)) -->
+                      <div class="hero-floating-card floating-card-3d-pop">
+                        <div class="floating-card-top">
+                          <span class="floating-tag" id="hero3dDishTag">TONIGHT'S HEARTH FEATURE · 01/03</span>
+                          <span class="floating-price mono-text" id="hero3dDishPrice">$42</span>
+                        </div>
+                        <h2 class="floating-dish-title" id="hero3dDishTitle">Saffron &amp; Ember Smoked Lamb Rack</h2>
+                        <p class="floating-dish-desc" id="hero3dDishDesc">Charred pomegranate glaze, whipped tahini labneh, crispy wild sage.</p>
+
+                        <div class="floating-card-actions">
+                          <button type="button" class="btn-text-action" id="heroAddSpecialBtn" data-dish-id="main-1">
+                            <span>+ Pre-Order for Your Table</span>
+                          </button>
+                          <div class="dish-3d-carousel-nav">
+                            <button type="button" class="carousel-3d-btn" id="prev3dDishBtn" aria-label="Previous 3D dish">&larr;</button>
+                            <button type="button" class="carousel-3d-btn" id="next3dDishBtn" aria-label="Next 3D dish">&rarr;</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- BACK OF 3D DISH CARD (Chef's Tasting Notes & Sommelier Spec) -->
+                  <div class="card-3d-face card-3d-back">
+                    <div class="back-3d-inner">
+                      <div class="back-3d-top">
+                        <span class="floating-tag">3D CHEF'S TASTING SPEC</span>
+                        <button type="button" class="flip-3d-back-btn" id="flipBackToFrontBtn">
+                          &larr; Flip Back to Plate
+                        </button>
+                      </div>
+
+                      <h3 class="back-3d-title" id="back3dTitle">Saffron &amp; Ember Smoked Lamb Rack</h3>
+                      <p class="back-3d-story" id="back3dStory">
+                        Seared directly over glowing white-oak coals for a caramelized crust, then rested with warm Iranian saffron butter and wild mountain sage.
+                      </p>
+
+                      <div class="back-3d-specs-grid">
+                        <div class="spec-3d-box">
+                          <span class="spec-label">HEARTH TEMP</span>
+                          <strong class="mono-text" id="back3dTemp">480°C Oak Ember</strong>
+                        </div>
+                        <div class="spec-3d-box">
+                          <span class="spec-label">PREP TIME</span>
+                          <strong class="mono-text" id="back3dTime">18 Mins Fresh</strong>
+                        </div>
+                        <div class="spec-3d-box">
+                          <span class="spec-label">CELLAR PAIRING</span>
+                          <strong id="back3dPairing">Syrah / Saffron Negroni</strong>
+                        </div>
+                        <div class="spec-3d-box">
+                          <span class="spec-label">DIETARY</span>
+                          <strong id="back3dDiet">Gluten-Free · Halal</strong>
+                        </div>
+                      </div>
+
+                      <div class="back-3d-smoke-meter">
+                        <div class="meter-label-row">
+                          <span>Wood-Smoke Intensity</span>
+                          <span class="mono-text" id="back3dSmokeText">Medium-Rich (82%)</span>
+                        </div>
+                        <div class="meter-track">
+                          <div class="meter-fill" id="back3dSmokeBar" style="width: 82%;"></div>
+                        </div>
+                      </div>
+
+                      <div class="back-3d-actions">
+                        <button type="button" class="btn btn-primary btn-full" id="back3dPreorderBtn">
+                          + Attach Dish to My Table Reservation
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h2 class="floating-dish-title">Saffron &amp; Ember Smoked Lamb Rack</h2>
-              <p class="floating-dish-desc">Charred pomegranate glaze, whipped tahini labneh, crispy wild sage.</p>
-              <div class="floating-card-actions">
-                <button type="button" class="btn-text-action" id="heroAddSpecialBtn" data-dish-id="main-1">
-                  <span>+ Pre-Order for Your Table</span>
-                </button>
-                <span class="floating-avail">14 portions tonight</span>
+            </div>
+
+            <!-- =========================================================
+                 MODE 2: 3D Interactive Isometric Floor & Table Map
+                 ========================================================= -->
+            <div class="stage-3d-scene" id="scene3dMap">
+              <div class="map-3d-container">
+                <div class="map-3d-header">
+                  <div>
+                    <span class="floating-tag">INTERACTIVE 3D FLOOR PLAN</span>
+                    <h3 class="map-3d-heading">Click Any 3D Table to Inspect &amp; Lock</h3>
+                  </div>
+                  <div class="camera-angle-pills" role="group" aria-label="3D Camera Angle">
+                    <button type="button" class="cam-pill active" data-cam="iso">3D Iso</button>
+                    <button type="button" class="cam-pill" data-cam="top">Top</button>
+                    <button type="button" class="cam-pill" data-cam="low">Hearth</button>
+                  </div>
+                </div>
+
+                <!-- 3D Isometric Dining Room Stage -->
+                <div class="iso-room-viewport" id="isoRoomViewport">
+                  <div class="iso-floor-plate" id="isoFloorPlate">
+                    <!-- Floor Grid Lines -->
+                    <div class="iso-grid-overlay"></div>
+
+                    <!-- 3D Glowing Wood-Fired Hearth Oven -->
+                    <div class="iso-hearth-structure">
+                      <div class="hearth-fire-glow"></div>
+                      <span class="iso-zone-label">🔥 WOOD HEARTH PASS</span>
+                    </div>
+
+                    <!-- Interactive 3D Table Nodes -->
+                    <button type="button" class="iso-table-3d active" data-3d-zone="Main Hearth Room" data-3d-table="Table H4 · Hearthside" data-3d-slots="18:00, 19:00, 20:15" data-3d-cap="2–4 Guests" style="top: 46%; left: 26%;">
+                      <span class="table-3d-top round">H4</span>
+                      <span class="table-3d-leg"></span>
+                      <span class="table-3d-tag">Hearthside</span>
+                    </button>
+
+                    <button type="button" class="iso-table-3d" data-3d-zone="Chef's Counter" data-3d-table="Counter Seats C3–C4" data-3d-slots="18:30, 20:15, 21:00" data-3d-cap="1–4 Guests" style="top: 26%; left: 64%;">
+                      <span class="table-3d-top bar">C3–C4</span>
+                      <span class="table-3d-leg"></span>
+                      <span class="table-3d-tag">Chef's Pass</span>
+                    </button>
+
+                    <button type="button" class="iso-table-3d" data-3d-zone="Botanical Patio" data-3d-table="Pergola Table P2" data-3d-slots="18:00, 18:30, 19:30" data-3d-cap="2–6 Guests" style="top: 72%; left: 66%;">
+                      <span class="table-3d-top round">P2</span>
+                      <span class="table-3d-leg"></span>
+                      <span class="table-3d-tag">Garden Patio</span>
+                    </button>
+
+                    <button type="button" class="iso-table-3d" data-3d-zone="Velvet Corner Booth" data-3d-table="Booth B1 · Quiet Alcove" data-3d-slots="17:30, 19:00, 21:00" data-3d-cap="2–4 Guests" style="top: 74%; left: 24%;">
+                      <span class="table-3d-top booth">B1</span>
+                      <span class="table-3d-leg"></span>
+                      <span class="table-3d-tag">Velvet Booth</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 3D Selected Table HUD -->
+                <div class="map-3d-hud">
+                  <div class="hud-info">
+                    <span class="hud-zone-badge" id="hud3dZone">Main Hearth Room</span>
+                    <h4 class="hud-table-title mono-text" id="hud3dTable">Table H4 · Hearthside (2–4 Guests)</h4>
+                    <p class="hud-slots-line">Prime slots: <strong class="mono-text" id="hud3dSlots">18:00, 19:00, 20:15</strong></p>
+                  </div>
+                  <button type="button" class="btn btn-primary btn-sm" id="hud3dLockBtn">
+                    Lock This 3D Table &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 MODE 3: 3D Host Call & Instant Concierge Cube
+                 ========================================================= -->
+            <div class="stage-3d-scene" id="scene3dCall">
+              <div class="call-3d-stage-card" id="call3dStageCard">
+                <div class="call-3d-orb-wrap">
+                  <div class="call-3d-orb">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  </div>
+                  <span class="live-status-chip"><span class="pulse-dot green"></span> Host Elena Live</span>
+                </div>
+
+                <h3 class="call-3d-heading">Direct 3D Host Concierge</h3>
+                <p class="call-3d-sub">Tap a 3D action tile below to dial, launch our interactive web call, or request a 2-minute callback.</p>
+
+                <a href="tel:+15552345678" class="call-3d-big-dial mono-text">
+                  (555) 234-5678
+                </a>
+
+                <div class="call-3d-tiles-grid">
+                  <button type="button" class="tile-3d-action" id="intro3dLaunchWebCall">
+                    <span class="tile-3d-emoji">🎙️</span>
+                    <strong>Interactive Web Call</strong>
+                    <span>Test voice keypad now</span>
+                  </button>
+                  <button type="button" class="tile-3d-action" id="intro3dJumpCallback">
+                    <span class="tile-3d-emoji">⏱️</span>
+                    <strong>2-Min Host Callback</strong>
+                    <span>Have Elena call you</span>
+                  </button>
+                  <button type="button" class="tile-3d-action" id="intro3dCopyNum">
+                    <span class="tile-3d-emoji">📋</span>
+                    <strong>Copy Direct Line</strong>
+                    <span>Save to clipboard</span>
+                  </button>
+                  <a href="#booking-section" class="tile-3d-action">
+                    <span class="tile-3d-emoji">📅</span>
+                    <strong>Online Slot Studio</strong>
+                    <span>Pick time &amp; table</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

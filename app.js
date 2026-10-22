@@ -654,11 +654,20 @@ function removePreorderDish(dishId) {
 
 function syncHeroSpecialBtn() {
   const heroBtn = document.getElementById('heroAddSpecialBtn');
-  if (!heroBtn) return;
-  const inCart = state.preOrderCart.some((i) => i.id === 'main-1');
-  heroBtn.innerHTML = inCart
-    ? '<span>✓ Added to Table Pre-Order</span>'
-    : '<span>+ Pre-Order for Your Table</span>';
+  const backBtn = document.getElementById('back3dPreorderBtn');
+  const activeDishId = heroBtn?.dataset.dishId || 'main-1';
+  const inCart = state.preOrderCart.some((i) => i.id === activeDishId);
+
+  if (heroBtn) {
+    heroBtn.innerHTML = inCart
+      ? '<span>✓ Added to Table Pre-Order</span>'
+      : '<span>+ Pre-Order for Your Table</span>';
+  }
+  if (backBtn) {
+    backBtn.textContent = inCart
+      ? '✓ Attached to Table Reservation'
+      : '+ Attach Dish to My Table Reservation';
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -934,7 +943,7 @@ function initMenuShowcase() {
 
   if (heroAddBtn) {
     heroAddBtn.addEventListener('click', () => {
-      togglePreorderDish('main-1');
+      togglePreorderDish(heroAddBtn.dataset.dishId || 'main-1');
     });
   }
 
@@ -1272,7 +1281,398 @@ function renderSavedBookingsDrawer() {
 }
 
 // ---------------------------------------------------------------------------
-// 14. Boot Application
+// 14. Interactive 3D Intro Stage (3D Dish Tilt/Flip, 3D Table Map, 3D Host Cube)
+// ---------------------------------------------------------------------------
+const HERO_3D_DISHES = [
+  {
+    id: 'main-1',
+    tag: "TONIGHT'S HEARTH FEATURE · 01/03",
+    title: 'Saffron & Ember Smoked Lamb Rack',
+    price: 42,
+    desc: 'Charred pomegranate glaze, whipped tahini labneh, crispy wild sage.',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1100&q=85',
+    badgeLeft: '🔥 480°C White-Oak Hearth',
+    badgeRight: '★ 4.9 Guest Favorite',
+    story:
+      'Seared directly over glowing white-oak coals for a caramelized crust, then rested with warm Iranian saffron butter and wild mountain sage.',
+    temp: '480°C Oak Ember',
+    prep: '18 Mins Fresh',
+    pairing: 'Syrah / Saffron Negroni',
+    diet: 'Gluten-Free · Halal',
+    smokeText: 'Medium-Rich (82%)',
+    smokePct: 82
+  },
+  {
+    id: 'main-4',
+    tag: 'WOOD-FIRED CENTERPIECE · 02/03',
+    title: '36-Day Dry-Aged Ribeye for the Table',
+    price: 68,
+    desc: '16oz bone-in prime ribeye crusted in smoked Tellicherry pepper & bone marrow jus.',
+    image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=1100&q=85',
+    badgeLeft: '🥩 36-Day Dry-Aged',
+    badgeRight: '🔥 Cast-Iron Finish',
+    story:
+      'Dry-aged in our Himalayan salt vault for 36 days, char-grilled over red-oak embers, and basted with roasted garlic & bone marrow butter.',
+    temp: '510°C Red-Oak Sear',
+    prep: '22 Mins Rested',
+    pairing: '2018 Barolo / Old Fashioned',
+    diet: 'Gluten-Free · High Protein',
+    smokeText: 'Bold Hearth Char (92%)',
+    smokePct: 92
+  },
+  {
+    id: 'starter-3',
+    tag: 'COASTAL EMBER STARTER · 03/03',
+    title: 'Ember-Seared Hokkaido Scallops',
+    price: 26,
+    desc: 'Saffron brown butter emulsion, crispy capers, charred Meyer lemon, sea fennel.',
+    image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=1100&q=85',
+    badgeLeft: '🌊 Wild Dayboat Catch',
+    badgeRight: '✨ Saffron Butter',
+    story:
+      'Hand-dived Hokkaido scallops kissed by applewood smoke for 90 seconds, served swimming in warm saffron hazelnut butter.',
+    temp: '420°C Applewood Kiss',
+    prep: '10 Mins Express',
+    pairing: 'Chablis Premier Cru',
+    diet: 'Gluten-Free · Pescatarian',
+    smokeText: 'Delicate Aromatic (58%)',
+    smokePct: 58
+  }
+];
+
+function init3dIntroStage() {
+  let currentDishIdx = 0;
+
+  const viewport = document.getElementById('hero3dViewport');
+  const dishRig = document.getElementById('dish3dRig');
+  const dishFlipper = document.getElementById('dish3dFlipper');
+  const glare = document.getElementById('hero3dGlare');
+  const callCard = document.getElementById('call3dStageCard');
+  const hintEl = document.getElementById('stage3dHint');
+
+  // 1. Switch between the 3 Interactive 3D Modes (Dish / Map / Call)
+  const launcherChips = document.querySelectorAll('.launcher-3d-Chip');
+  const stageTabs = document.querySelectorAll('.stage-tab');
+  const scenes = {
+    dish: document.getElementById('scene3dDish'),
+    map: document.getElementById('scene3dMap'),
+    call: document.getElementById('scene3dCall')
+  };
+
+  function set3dStageMode(mode) {
+    launcherChips.forEach((chip) => {
+      chip.classList.toggle('active', chip.dataset.stageMode === mode);
+    });
+    stageTabs.forEach((tab) => {
+      const isAct = tab.dataset.stageTab === mode;
+      tab.classList.toggle('active', isAct);
+      tab.setAttribute('aria-selected', String(isAct));
+    });
+    Object.keys(scenes).forEach((k) => {
+      if (scenes[k]) {
+        scenes[k].classList.toggle('active', k === mode);
+      }
+    });
+    if (hintEl) {
+      if (mode === 'dish') hintEl.textContent = 'Move cursor to tilt 3D';
+      if (mode === 'map') hintEl.textContent = 'Click any 3D table node';
+      if (mode === 'call') hintEl.textContent = 'Tap any 3D concierge tile';
+    }
+  }
+
+  launcherChips.forEach((chip) => {
+    chip.addEventListener('click', () => set3dStageMode(chip.dataset.stageMode));
+  });
+  stageTabs.forEach((tab) => {
+    tab.addEventListener('click', () => set3dStageMode(tab.dataset.stageTab));
+  });
+
+  // 2. Real-Time 3D Perspective Mouse/Touch Tilt & Specular Glare
+  if (viewport) {
+    const handlePointerMove = (clientX, clientY) => {
+      const rect = viewport.getBoundingClientRect();
+      const xRel = (clientX - rect.left) / rect.width; // 0 to 1
+      const yRel = (clientY - rect.top) / rect.height; // 0 to 1
+
+      const rotateY = (xRel - 0.5) * 18; // -9deg to +9deg
+      const rotateX = (0.5 - yRel) * 16; // -8deg to +8deg
+
+      if (dishRig) {
+        dishRig.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      }
+      if (callCard) {
+        callCard.style.transform = `rotateX(${(rotateX * 0.55).toFixed(2)}deg) rotateY(${(rotateY * 0.55).toFixed(2)}deg)`;
+      }
+      if (glare) {
+        glare.style.setProperty('--glare-x', `${(xRel * 100).toFixed(1)}%`);
+        glare.style.setProperty('--glare-y', `${(yRel * 100).toFixed(1)}%`);
+      }
+    };
+
+    viewport.addEventListener('mousemove', (e) => {
+      handlePointerMove(e.clientX, e.clientY);
+    });
+
+    viewport.addEventListener(
+      'touchmove',
+      (e) => {
+        if (e.touches && e.touches[0]) {
+          handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener('mouseleave', () => {
+      if (dishRig) dishRig.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      if (callCard) callCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  }
+
+  // 3. 3D Dish Card 180deg Flip Controls
+  const flipBtn = document.getElementById('flipDishCardBtn');
+  const flipBackBtn = document.getElementById('flipBackToFrontBtn');
+  if (flipBtn && dishFlipper) {
+    flipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dishFlipper.classList.add('is-flipped');
+    });
+  }
+  if (flipBackBtn && dishFlipper) {
+    flipBackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dishFlipper.classList.remove('is-flipped');
+    });
+  }
+
+  // 4. 3D Dish Carousel Switcher (Prev / Next)
+  function renderHero3dDish(idx) {
+    const d = HERO_3D_DISHES[idx];
+    if (!d) return;
+
+    const imgEl = document.getElementById('hero3dDishImg');
+    if (imgEl) {
+      imgEl.style.opacity = '0.35';
+      setTimeout(() => {
+        imgEl.src = d.image;
+        imgEl.alt = d.title;
+        imgEl.style.opacity = '1';
+      }, 140);
+    }
+
+    document.getElementById('hero3dDishTag').textContent = d.tag;
+    document.getElementById('hero3dDishPrice').textContent = `$${d.price}`;
+    document.getElementById('hero3dDishTitle').textContent = d.title;
+    document.getElementById('hero3dDishDesc').textContent = d.desc;
+    document.getElementById('hero3dBadgeLeft').innerHTML = `<span>${d.badgeLeft}</span>`;
+    document.getElementById('hero3dBadgeRight').innerHTML = `<span>${d.badgeRight}</span>`;
+
+    // Back of 3D Card
+    document.getElementById('back3dTitle').textContent = d.title;
+    document.getElementById('back3dStory').textContent = d.story;
+    document.getElementById('back3dTemp').textContent = d.temp;
+    document.getElementById('back3dTime').textContent = d.prep;
+    document.getElementById('back3dPairing').textContent = d.pairing;
+    document.getElementById('back3dDiet').textContent = d.diet;
+    document.getElementById('back3dSmokeText').textContent = d.smokeText;
+    const smokeBar = document.getElementById('back3dSmokeBar');
+    if (smokeBar) smokeBar.style.width = `${d.smokePct}%`;
+
+    const heroAddBtn = document.getElementById('heroAddSpecialBtn');
+    if (heroAddBtn) heroAddBtn.dataset.dishId = d.id;
+    syncHeroSpecialBtn();
+  }
+
+  const prevDishBtn = document.getElementById('prev3dDishBtn');
+  const nextDishBtn = document.getElementById('next3dDishBtn');
+  const backPreorderBtn = document.getElementById('back3dPreorderBtn');
+
+  if (prevDishBtn) {
+    prevDishBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDishIdx = (currentDishIdx - 1 + HERO_3D_DISHES.length) % HERO_3D_DISHES.length;
+      renderHero3dDish(currentDishIdx);
+    });
+  }
+  if (nextDishBtn) {
+    nextDishBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDishIdx = (currentDishIdx + 1) % HERO_3D_DISHES.length;
+      renderHero3dDish(currentDishIdx);
+    });
+  }
+  if (backPreorderBtn) {
+    backPreorderBtn.addEventListener('click', () => {
+      const dishId = HERO_3D_DISHES[currentDishIdx].id;
+      togglePreorderDish(dishId);
+    });
+  }
+
+  // 5. Interactive 3D Isometric Floor Map Controls
+  const isoPlate = document.getElementById('isoFloorPlate');
+  const camPills = document.querySelectorAll('.cam-pill');
+  const isoTables = document.querySelectorAll('.iso-table-3d');
+  const hudZone = document.getElementById('hud3dZone');
+  const hudTable = document.getElementById('hud3dTable');
+  const hudSlots = document.getElementById('hud3dSlots');
+  const hudLockBtn = document.getElementById('hud3dLockBtn');
+
+  let selected3dMapSlot = '19:00';
+
+  camPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      camPills.forEach((p) => p.classList.remove('active'));
+      pill.classList.add('active');
+      if (!isoPlate) return;
+      isoPlate.classList.remove('cam-top', 'cam-low');
+      if (pill.dataset.cam === 'top') isoPlate.classList.add('cam-top');
+      if (pill.dataset.cam === 'low') isoPlate.classList.add('cam-low');
+    });
+  });
+
+  isoTables.forEach((tBtn) => {
+    tBtn.addEventListener('click', () => {
+      isoTables.forEach((b) => b.classList.remove('active'));
+      tBtn.classList.add('active');
+
+      const z = tBtn.dataset['3dZone'];
+      const tbl = tBtn.dataset['3dTable'];
+      const slots = tBtn.dataset['3dSlots'];
+      const cap = tBtn.dataset['3dCap'];
+
+      if (hudZone) hudZone.textContent = z;
+      if (hudTable) hudTable.textContent = `${tbl} (${cap})`;
+      if (hudSlots) hudSlots.textContent = slots;
+
+      // Sync with main booking engine state
+      state.zone = z;
+      state.table = tbl;
+      const firstSlot = slots.split(',')[0].trim();
+      selected3dMapSlot = firstSlot;
+
+      // Highlight matching zone card in main Booking Section
+      document.querySelectorAll('.zone-card').forEach((zc) => {
+        const match = zc.dataset.zone === z;
+        zc.classList.toggle('active', match);
+        zc.setAttribute('aria-checked', String(match));
+      });
+      const zoneBadge = document.getElementById('selectedZoneBadge');
+      if (zoneBadge) zoneBadge.textContent = z;
+
+      renderTimeSlots();
+      updateLiveTicket();
+    });
+  });
+
+  if (hudLockBtn) {
+    hudLockBtn.addEventListener('click', () => {
+      state.selectedSlot = selected3dMapSlot;
+      showLiveDraftTicket();
+      renderTimeSlots();
+      updateLiveTicket();
+      document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
+      showToast(`3D Table "${state.table}" locked for ${state.selectedSlot}!`);
+    });
+  }
+
+  // 6. 3D Host Concierge Cube Actions
+  const launchWebCallBtn = document.getElementById('intro3dLaunchWebCall');
+  const jumpCallbackBtn = document.getElementById('intro3dJumpCallback');
+  const copyNumBtn = document.getElementById('intro3dCopyNum');
+
+  if (launchWebCallBtn) {
+    launchWebCallBtn.addEventListener('click', () => {
+      document.getElementById('simulateCallBtn')?.click();
+    });
+  }
+  if (jumpCallbackBtn) {
+    jumpCallbackBtn.addEventListener('click', () => {
+      document.getElementById('call-section')?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => document.getElementById('cbNameInput')?.focus(), 450);
+    });
+  }
+  if (copyNumBtn) {
+    copyNumBtn.addEventListener('click', () => {
+      navigator.clipboard?.writeText('(555) 234-5678');
+      showToast('Copied Host Desk line (555) 234-5678 to clipboard!');
+    });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 15. Ambient 3D Hearth Embers Background Canvas
+// ---------------------------------------------------------------------------
+function initHeroEmbersCanvas() {
+  const canvas = document.getElementById('heroEmbersCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let width = 0;
+  let height = 0;
+  let pointerX = 0.5;
+
+  function resize() {
+    const parent = canvas.parentElement;
+    if (!parent) return;
+    width = parent.clientWidth;
+    height = parent.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', (e) => {
+    pointerX = e.clientX / Math.max(window.innerWidth, 1);
+  });
+
+  const embers = Array.from({ length: 26 }, () => ({
+    x: Math.random() * 1200,
+    y: Math.random() * 700,
+    z: 0.3 + Math.random() * 0.9, // 3D depth factor
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: -(0.25 + Math.random() * 0.55),
+    radius: 1.5 + Math.random() * 3.2,
+    alpha: 0.15 + Math.random() * 0.35
+  }));
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    const wind = (pointerX - 0.5) * 0.45;
+
+    for (const p of embers) {
+      p.x += (p.vx + wind) * p.z;
+      p.y += p.vy * p.z;
+
+      if (p.y < -10) {
+        p.y = height + 10;
+        p.x = Math.random() * width;
+      }
+      if (p.x < -10) p.x = width + 10;
+      if (p.x > width + 10) p.x = -10;
+
+      const r = p.radius * p.z;
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 2.6);
+      grad.addColorStop(0, `rgba(234, 88, 12, ${p.alpha})`);
+      grad.addColorStop(0.5, `rgba(251, 191, 36, ${p.alpha * 0.6})`);
+      grad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r * 2.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// ---------------------------------------------------------------------------
+// 16. Boot Application
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedBookings();
@@ -1285,6 +1685,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMenuShowcase();
   initCallHub();
   initSavedBookingsModal();
+  init3dIntroStage();
+  initHeroEmbersCanvas();
 
   // Header scroll elevation
   const header = document.getElementById('siteHeader');
